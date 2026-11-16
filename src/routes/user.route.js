@@ -2,6 +2,8 @@ import { Router } from "express";
 import {
   changeCurrentPassword,
   getCurrentUser,
+  getUserChannelDetails,
+  getWatchHistory,
   loginUser,
   logoutUser,
   refreshAccessToken,
@@ -37,3 +39,5 @@ userRouter
 userRouter
   .route("/update-cover-image")
   .post(verifyAccessToken, upload.single("coverImage"), updateUserCoverImage);
+userRouter.route("/c/:username").get(verifyAccessToken, getUserChannelDetails);
+userRouter.route("/history").get(verifyAccessToken, getWatchHistory);
