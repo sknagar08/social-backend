@@ -24,20 +24,20 @@ userRouter.route("/register").post(
   ]),
   registerUser
 );
-
-userRouter.route("/").get(verifyAccessToken, getCurrentUser);
 userRouter.route("/login").post(loginUser);
-userRouter.route("/logout").post(verifyAccessToken, logoutUser);
 userRouter.route("/refresh-token").post(refreshAccessToken);
-userRouter
-  .route("/change-password")
-  .post(verifyAccessToken, changeCurrentPassword);
-userRouter.route("/update-details").post(verifyAccessToken, updateUserDetails);
+
+userRouter.use(verifyAccessToken);
+
+userRouter.route("/").get(getCurrentUser);
+userRouter.route("/logout").post(logoutUser);
+userRouter.route("/change-password").post(changeCurrentPassword);
+userRouter.route("/update-details").patch(updateUserDetails);
 userRouter
   .route("/update-avatar")
-  .post(verifyAccessToken, upload.single("avatar"), updateUserAvatar);
+  .patch(upload.single("avatar"), updateUserAvatar);
 userRouter
   .route("/update-cover-image")
-  .post(verifyAccessToken, upload.single("coverImage"), updateUserCoverImage);
-userRouter.route("/c/:username").get(verifyAccessToken, getUserChannelDetails);
-userRouter.route("/history").get(verifyAccessToken, getWatchHistory);
+  .patch(upload.single("coverImage"), updateUserCoverImage);
+userRouter.route("/c/:username").get(getUserChannelDetails);
+userRouter.route("/history").get(getWatchHistory);
