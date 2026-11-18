@@ -4,6 +4,8 @@ import {
   toggleCommentLike,
   toggleVideoLike,
   toggleTweetLike,
+  getLikedCommets,
+  getLikedTweets,
 } from "../controllers/like.controller.js";
 import { verifyAccessToken } from "../middlewares/auth.middleware.js";
 
@@ -15,3 +17,5 @@ likeRouter.route("/toggle/v/:videoId").post(toggleVideoLike);
 likeRouter.route("/toggle/c/:commentId").post(toggleCommentLike);
 likeRouter.route("/toggle/t/:tweetId").post(toggleTweetLike);
 likeRouter.route("/videos").get(getLikedVideos);
+likeRouter.route("/comments").get(getLikedCommets);
+likeRouter.route("/tweets").get(getLikedTweets);
