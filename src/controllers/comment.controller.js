@@ -34,11 +34,12 @@ export const getVideoComments = asyncHandler(async (req, res) => {
     );
   }
 
-  if (
-    !mongoose.isValidObjectId(videoId) ||
-    !(await Video.exists({ _id: videoId }))
-  ) {
+  if (!mongoose.isValidObjectId(videoId)) {
     throw new ApiError(400, "Please provide a valid video id");
+  }
+
+  if (!(await Video.exists({ _id: videoId }))) {
+    throw new ApiError(404, "Video not found");
   }
 
   const comments = Comment.aggregate([
@@ -64,11 +65,12 @@ export const addComment = asyncHandler(async (req, res) => {
     );
   }
 
-  if (
-    !mongoose.isValidObjectId(videoId) ||
-    !(await Video.exists({ _id: videoId }))
-  ) {
+  if (!mongoose.isValidObjectId(videoId)) {
     throw new ApiError(400, "Please provide a valid video id");
+  }
+
+  if (!(await Video.exists({ _id: videoId }))) {
+    throw new ApiError(404, "Video not found");
   }
 
   const { content } = req.body;
@@ -94,11 +96,12 @@ export const addComment = asyncHandler(async (req, res) => {
 export const updateComment = asyncHandler(async (req, res) => {
   const { commentId } = req.params;
 
-  if (
-    !mongoose.isValidObjectId(commentId) ||
-    !(await Comment.exists({ _id: commentId }))
-  ) {
+  if (!mongoose.isValidObjectId(commentId)) {
     throw new ApiError(400, "Please provide a valid comment id");
+  }
+
+  if (!(await Video.exists({ _id: commentId }))) {
+    throw new ApiError(404, "Video not found");
   }
 
   const comment = await Comment.findById(commentId);
@@ -133,11 +136,12 @@ export const updateComment = asyncHandler(async (req, res) => {
 export const deleteComment = asyncHandler(async (req, res) => {
   const { commentId } = req.params;
 
-  if (
-    !mongoose.isValidObjectId(commentId) ||
-    !(await Comment.exists({ _id: commentId }))
-  ) {
+  if (!mongoose.isValidObjectId(commentId)) {
     throw new ApiError(400, "Please provide a valid comment id");
+  }
+
+  if (!(await Video.exists({ _id: commentId }))) {
+    throw new ApiError(404, "Video not found");
   }
 
   const comment = await Comment.findById(commentId);
