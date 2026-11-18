@@ -11,6 +11,7 @@ import { commentRouter } from "./routes/comment.route.js";
 import { likeRouter } from "./routes/like.route.js";
 import { playlistRouter } from "./routes/playlist.route.js";
 import { dashboardRouter } from "./routes/dashboard.route.js";
+import { ApiError } from "./utils/ApiError.js";
 
 export const app = express();
 
@@ -35,3 +36,30 @@ app.use(`${V1_API_ROUTE}/comments`, commentRouter);
 app.use(`${V1_API_ROUTE}/likes`, likeRouter);
 app.use(`${V1_API_ROUTE}/playlist`, playlistRouter);
 app.use(`${V1_API_ROUTE}/dashboard`, dashboardRouter);
+
+app.use((err, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  if (err instanceof ApiError) {
+    return res.status(err.statusCode).json(err);
+  }
+
+  console.error(err);
+  const statusCode =
+    Number.isInteger(err.status) && err.status >= 400 && err.status < 600
+      ? err.status
+      : 500;
+
+  return res.status(statusCode).json({
+    statusCode,
+    data: null,
+    message:
+      statusCode >= 500
+        ? "Internal server error"
+        : err.message || "Request failed",
+    success: false,
+    errors: [],
+  });
+});
